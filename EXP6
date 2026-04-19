@@ -1,0 +1,21 @@
+**Generate and Verify MD5, SHA-1, and SHA-256 Hash Digests for Text and Files using Python**
+
+
+import hashlib
+
+def h(d,t):
+    print(f"\n--- {t} Hashes ---")
+    print("MD5     :", hashlib.md5(d).hexdigest())
+    print("SHA-1   :", hashlib.sha1(d).hexdigest())
+    print("SHA-256 :", hashlib.sha256(d).hexdigest())
+
+print("1. Hash Text\n2. Hash File")
+c=input("Enter your choice (1/2): ")
+
+if c=='1':
+    h(input("Enter text: ").encode(),'Text')
+elif c=='2':
+    try: h(open(input("Enter file path: "),'rb').read(),'File')
+    except: print("File not found!")
+else:
+    print("Invalid choice!")
