@@ -1,0 +1,24 @@
+///pip install pycryptodome///
+
+from Crypto.Cipher import DES
+from Crypto.Util.Padding import pad, unpad
+from Crypto.Random import get_random_bytes
+
+p = b"HELLO DES ALGORITHM"
+k = b"8bytekey"
+
+print("Plaintext:", p)
+
+# ECB
+e = DES.new(k, DES.MODE_ECB)
+c1 = e.encrypt(pad(p, 8))
+print("\nECB Mode Ciphertext:", c1)
+print("ECB Mode Decrypted:", unpad(e.decrypt(c1), 8))
+
+# CBC
+iv = get_random_bytes(8)
+c = DES.new(k, DES.MODE_CBC, iv)
+c2 = c.encrypt(pad(p, 8))
+print("\nCBC Mode IV:", iv)
+print("CBC Mode Ciphertext:", c2)
+print("CBC Mode Decrypted:", unpad(DES.new(k, DES.MODE_CBC, iv).decrypt(c2), 8))
