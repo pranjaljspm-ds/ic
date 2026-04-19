@@ -1,0 +1,18 @@
+DIFFIE HELLMAN KEY EXCHANGE ALGORITHM
+
+import secrets
+
+def dh():
+    p = secrets.randbits(256) | 1
+    while not all(pow(a, p-1, p)==1 for a in (2,3,5)): p = secrets.randbits(256) | 1
+    g = 2
+    a,b = secrets.randbelow(p-2)+1, secrets.randbelow(p-2)+1
+    A,B = pow(g,a,p), pow(g,b,p)
+    s1,s2 = pow(B,a,p), pow(A,b,p)
+
+    print("p =",p,"\ng =",g)
+    print("\nA =",A,"\nB =",B)
+    print("\nShared secrets match?", s1==s2)
+    print("Shared secret =",s1)
+
+dh()
