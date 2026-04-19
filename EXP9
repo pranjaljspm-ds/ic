@@ -1,0 +1,49 @@
+To design and demonstrate a secure message exchange system using hybrid cryptography
+
+import math
+
+def scientific_calculator():
+    ops = {
+        '1': lambda a,b: a+b,
+        '2': lambda a,b: a-b,
+        '3': lambda a,b: a*b,
+        '4': lambda a,b: "Error: Division by zero is not allowed." if b==0 else a/b,
+        '5': lambda a,b: a**b
+    }
+
+    while True:
+        print("\nScientific Calculator\n1.Addition\n2.Subtraction\n3.Multiplication\n4.Division\n5.Power\n6.Square Root\n7.Log\n8.Sin\n9.Cos\n10.Tan\n11.Factorial\n12.Exit")
+        c = input("Enter your choice: ")
+
+        if c == '12':
+            print("Calculator closed."); break
+
+        try:
+            if c in ops:
+                a,b = float(input("Enter first number: ")), float(input("Enter second number: "))
+                print("Result =", ops[c](a,b))
+
+            elif c == '6':
+                a = float(input("Enter number: "))
+                print("Error: Square root of negative number is not real." if a<0 else "Result = "+str(math.sqrt(a)))
+
+            elif c == '7':
+                a = float(input("Enter number: "))
+                print("Error: Log is defined only for positive numbers." if a<=0 else f"Natural Log = {math.log(a)}\nLog base 10 = {math.log10(a)}")
+
+            elif c in ['8','9','10']:
+                a = float(input("Enter angle in degrees: "))
+                f = [math.sin, math.cos, math.tan][int(c)-8]
+                print("Result =", f(math.radians(a)))
+
+            elif c == '11':
+                a = int(input("Enter integer: "))
+                print("Error: Factorial of negative number is not defined." if a<0 else "Result = "+str(math.factorial(a)))
+
+            else:
+                print("Invalid choice. Please try again.")
+
+        except:
+            print("Invalid input. Please enter numeric values correctly.")
+
+scientific_calculator()
