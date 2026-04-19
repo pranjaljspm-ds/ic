@@ -1,0 +1,72 @@
+1.caesar cipher
+
+def caesar(text, key):
+    return "".join(
+        chr((ord(c) - 65 + key) % 26 + 65) if c.isalpha() else c
+        for c in text.upper()
+    )
+plaintext = "INFORMATION SECURITY"
+key = 3
+ciphertext = caesar(plaintext, key)
+decrypted = caesar(ciphertext, -key)
+print("Plaintext :", plaintext)
+print("Encrypted :", ciphertext)
+print("Decrypted :", decrypted)
+
+2.playfair cipher
+
+def playfair_encrypt(text, key):
+    key = "".join(dict.fromkeys(key.upper().replace("J","I")))
+    m = list(key + "".join(c for c in "ABCDEFGHIKLMNOPQRSTUVWXYZ" if c not in key))
+    m = [m[i:i+5] for i in range(0,25,5)]
+    def pos(c): return next((r,c2) for r in range(5) for c2 in range(5) if m[r][c2]==c)
+    t = text.upper().replace("J","I").replace(" ","")
+    p,i=[],0
+    while i<len(t):
+        a=t[i]; b=t[i+1] if i+1<len(t) else 'X'
+        p.append((a,'X') if a==b else (a,b)); i+=1 if a==b else 2
+    
+    return "".join(
+        m[r1][(c1+1)%5]+m[r2][(c2+1)%5] if r1==r2 else
+        m[(r1+1)%5][c1]+m[(r2+1)%5][c2] if c1==c2 else
+        m[r1][c2]+m[r2][c1]
+        for a,b in p
+        for (r1,c1),(r2,c2) in [ (pos(a),pos(b)) ]
+    )
+    
+plaintext = "INFORMATION"
+key = "SECURITY"
+print("Plaintext :", plaintext)
+print("Encrypted :", playfair_encrypt(plaintext, key))
+
+3.Monoalphabetic Cipher
+
+import string, random
+
+a = string.ascii_uppercase
+s = list(a); random.shuffle(s)
+m = dict(zip(a, s)); r = {v:k for k,v in m.items()}
+
+mono_encrypt = lambda t: ''.join(m.get(c,c) for c in t.upper())
+mono_decrypt = lambda t: ''.join(r.get(c,c) for c in t)
+
+p = "SECURITY"
+c = mono_encrypt(p)
+
+print("Mapping:", m)
+print("Plaintext:", p)
+print("Encrypted:", c)
+print("Decrypted:", mono_decrypt(c))
+
+4.Frequency Analysis
+
+from collections import Counter
+
+def frequency_analysis(text):
+    text = text.replace(" ", "").upper()
+    freq = Counter(text)
+    for letter, count in freq.most_common():
+        print(letter, ":", count)
+
+ciphertext = "LQIRUPDWLRQVHFXULWB"
+frequency_analysis(ciphertext)
