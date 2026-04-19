@@ -1,0 +1,22 @@
+Use OpenSSL to create a self-signed digital certificate and simulate SSL handshake
+
+import subprocess, time
+
+def r(c):
+    o=subprocess.run(c,shell=True,capture_output=True,text=True)
+    print("COMMAND:",c,"\nSTDOUT:\n",o.stdout)
+    if o.stderr: print("STDERR:\n",o.stderr)
+    print("-"*60)
+
+r("openssl version")
+r('openssl req -x509 -newkey rsa:2048 -keyout server.key -out server.crt -days 365 -nodes -subj "/CN=localhost"')
+r("openssl x509 -in server.crt -text -noout")
+
+p=subprocess.Popen("openssl s_server -accept 4433 -cert server.crt -key server.key",
+                   shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+
+time.sleep(3)
+r("openssl s_client -connect localhost:4433")
+p.terminate()
+
+print("Experiment completed successfully.")
