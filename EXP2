@@ -1,0 +1,75 @@
+1.COLUMNAR TRANSPOSITION CIPHER
+
+def col(text, key, dec=False):
+    o = sorted(range(len(key)), key=lambda i: key[i])
+    c, r = len(key), (len(text)+len(key)-1)//len(key)
+    g = [['']*c for _ in range(r)]
+    i = 0
+
+    if not dec:
+        for x in range(r):
+            for y in range(c):
+                if i < len(text): g[x][y]=text[i]; i+=1
+        return "".join(g[x][y] for y in o for x in range(r) if g[x][y])
+    else:
+        for y in o:
+            for x in range(r):
+                if i < len(text): g[x][y]=text[i]; i+=1
+        return "".join(g[x][y] for x in range(r) for y in range(c) if g[x][y])
+
+text="HELLOWORLD"; key="ZEBRA"
+e = col(text,key)
+print("Encrypted:", e)
+print("Decrypted:", col(e,key,True))
+
+2.RAILFENCE CIPHER
+
+def rf_encrypt(t, r):
+    f=[[] for _ in range(r)]
+    i,d=0,1
+    for c in t:
+        f[i].append(c)
+        i+=d; d*=-1 if i in (0,r-1) else 1
+    return ''.join(''.join(x) for x in f)
+def rf_decrypt(t, r):
+    n=len(t); f=[['']*n for _ in range(r)]
+    i,d=0,1
+    for j in range(n):
+        f[i][j]='*'
+        i+=d; d*=-1 if i in (0,r-1) else 1
+    k=0
+    for x in range(r):
+        for y in range(n):
+            if f[x][y]=='*': f[x][y]=t[k]; k+=1
+    res=[]; i,d=0,1
+    for j in range(n):
+        res.append(f[i][j])
+        i+=d; d*=-1 if i in (0,r-1) else 1
+    return ''.join(res)
+text="HELLOWORLD"; rails=3
+e=rf_encrypt(text,rails)
+print("Encrypted:",e)
+print("Decrypted:",rf_decrypt(e,rails))
+
+3.FREQUENCY ANALYSIS
+(Columnar Transposition Cipher)
+
+from collections import Counter
+def frequency_analysis(text):
+    text = text.replace(" ", "").upper()
+    freq = Counter(text)
+    for letter, count in freq.most_common():
+        print(letter, ":", count)
+ciphertext = "EVXACDESEORXDEXWIR"   # sample columnar cipher text
+frequency_analysis(ciphertext)
+
+(Rail-Fence Cipher)
+
+from collections import Counter
+def frequency_analysis(text):
+    text = text.replace(" ", "").upper()
+    freq = Counter(text)
+    for letter, count in freq.most_common():
+        print(letter, ":", count)
+ciphertext = "WECRLTEERDSOEEFEAOCAIVDEN"  # sample rail fence cipher text
+frequency_analysis(ciphertext)
