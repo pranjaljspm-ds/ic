@@ -1,0 +1,23 @@
+RSA ALORITHM IN PYTHON AND GENERATE ENCRYPTION AND DECRYPTION KEY
+
+import math
+
+p,q=3,7
+n=p*q; phi=(p-1)*(q-1)
+
+e=next(i for i in range(2,phi) if math.gcd(i,phi)==1)
+d=((2*phi)+1)//e
+
+print("n =",n)
+print("e =",e)
+print("d =",d)
+print(f'Public key: {(e,n)}')
+print(f'Private key: {(d,n)}')
+
+m=11
+print(f'Original message:{m}')
+
+c=pow(m,e)%n
+print(f'Encrypted message: {c}')
+
+print(f'Decrypted message: {pow(int(c),int(d))%n}')
